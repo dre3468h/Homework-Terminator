@@ -8,7 +8,7 @@ import FAQ from './components/FAQ';
 import Disclaimer from './components/Disclaimer';
 import QuoteCalculator from './components/QuoteCalculator';
 import TeamSection from './components/TeamSection';
-import { ArrowRight, CheckCircle2, Star, ShieldCheck, Zap, Feather, MessageSquare, Award, Crown, X } from 'lucide-react';
+import { ArrowRight, CheckCircle2, Star, ShieldCheck, Zap, Feather, MessageSquare, Award, Crown, X, ZoomIn, Download } from 'lucide-react';
 import { Language, translations } from './translations';
 
 const App: React.FC = () => {
@@ -18,6 +18,9 @@ const App: React.FC = () => {
   const [language, setLanguage] = useState<Language>('zh');
   const [darkMode, setDarkMode] = useState(false);
   
+  // Image Lightbox State
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+
   // Info Modal State for Footer Links
   const [infoModal, setInfoModal] = useState<{isOpen: boolean, title: string, content: string}>({
     isOpen: false,
@@ -78,6 +81,34 @@ const App: React.FC = () => {
   };
 
   // --- Components ---
+
+  // Reusable Component for Image Gallery with Hover Effect
+  const HoverGallery = ({ images }: { images: string[] }) => (
+    <div className="grid grid-cols-2 gap-4 h-full content-center">
+        {images.map((img, idx) => (
+            <div 
+                key={idx} 
+                onClick={() => setSelectedImage(img)}
+                className={`relative group overflow-hidden border border-ink shadow-[4px_4px_0px_0px_var(--color-ink)] bg-paper aspect-square transition-all duration-300 cursor-zoom-in ${idx % 2 === 1 ? 'mt-8' : ''}`}
+            >
+                <img 
+                    src={img} 
+                    alt="Gallery" 
+                    className="object-cover w-full h-full transition-transform duration-500 group-hover:scale-110"
+                />
+                {/* Zoom Pop-up Effect Area */}
+                <div className="absolute inset-0 bg-accent/0 group-hover:bg-accent/10 transition-colors pointer-events-none"></div>
+                
+                {/* Scale up interaction simulation: When hovering, it creates a 'magnifying' feel via scale */}
+                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center pointer-events-none">
+                     <div className="bg-paper p-3 border border-ink shadow-lg rounded-full">
+                        <ZoomIn size={20} className="text-accent" />
+                     </div>
+                </div>
+            </div>
+        ))}
+    </div>
+  );
 
   const HeroSection = () => (
     <div id="home" className="relative min-h-[90vh] flex items-center bg-paper pt-32 md:pt-40 border-b border-ink overflow-hidden">
@@ -141,7 +172,7 @@ const App: React.FC = () => {
           </div>
 
           {/* Right Side Visual - The "File/Document" Look */}
-          <div className="col-span-1 lg:col-span-5 relative reveal active delay-200 hidden lg:block">
+          <div className="col-span-1 lg:col-span-5 relative reveal active delay-200 mt-12 lg:mt-0">
              <div className="relative z-10 bg-surface p-8 border border-ink shadow-[10px_10px_0px_0px_var(--color-ink)]">
                  <div className="flex justify-between items-start mb-8 border-b border-ink pb-4">
                      <div>
@@ -181,9 +212,15 @@ const App: React.FC = () => {
                             placeholder={t.hero.priority_form.phone}
                             className="w-full bg-paper border border-ink p-3 text-sm focus:outline-none focus:border-accent placeholder-ink-light/50 transition-colors"
                         />
-                        <button className="w-full bg-ink text-paper py-3 text-xs font-bold uppercase tracking-widest hover:bg-accent hover:text-white transition-all shadow-sm">
+                        {/* UPDATE: Changed button to <a> tag linking to WhatsApp */}
+                        <a 
+                            href="https://wa.me/85297723792?text=I%20would%20like%20to%20register%20for%20priority%20notification%20for%20academic%20services." 
+                            target="_blank"
+                            rel="noreferrer"
+                            className="w-full block text-center bg-ink text-paper py-3 text-xs font-bold uppercase tracking-widest hover:bg-accent hover:text-white transition-all shadow-sm"
+                        >
                             {t.hero.priority_form.submit}
-                        </button>
+                        </a>
                     </div>
                  </div>
              </div>
@@ -195,39 +232,55 @@ const App: React.FC = () => {
 
   const AboutSection = () => (
     <div id="about" className="min-h-screen bg-paper flex items-center justify-center py-32 md:py-40 px-6 border-b border-ink">
-         <div className="max-w-5xl w-full bg-surface p-12 md:p-16 reveal relative border border-ink shadow-xl">
-            <div className="absolute top-0 left-0 w-full h-1 bg-ink"></div>
-            <span className="text-ink-light font-mono font-bold tracking-widest text-xs uppercase mb-4 block">01 / ABOUT</span>
-            <div className="flex items-center gap-6 mb-10">
-                <Feather className="w-12 h-12 text-ink" />
-                <h2 className="text-3xl md:text-4xl font-black text-ink uppercase">{t.about.title}</h2>
-            </div>
-            <div className="space-y-8 text-lg text-ink-light leading-loose">
-                <p>
-                   {t.about.p1}
-                </p>
-                <p>
-                   {t.about.p2}
-                </p>
-                <div className="bg-paper p-8 border-l-4 border-accent mt-8 italic text-ink font-serif relative">
-                   "{t.about.p3}"
+         {/* Updated Layout: Grid with Left Text and Right Gallery */}
+         <div className="max-w-[1920px] mx-auto w-full grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-24 items-center">
+            
+            {/* Left Content */}
+            <div className="bg-surface p-12 md:p-16 reveal relative border border-ink shadow-xl h-full flex flex-col justify-center">
+                <div className="absolute top-0 left-0 w-full h-1 bg-ink"></div>
+                <span className="text-ink-light font-mono font-bold tracking-widest text-xs uppercase mb-4 block">01 / ABOUT</span>
+                <div className="flex items-center gap-6 mb-10">
+                    <Feather className="w-12 h-12 text-ink" />
+                    <h2 className="text-3xl md:text-4xl font-black text-ink uppercase">{t.about.title}</h2>
                 </div>
-                
-                {/* Stats */}
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-8 pt-12 border-t border-ink-light/20 mt-8">
-                    {[
-                        { num: "4", suffix: "+", label: "Years Exp." },
-                        { num: "500", suffix: "+", label: "Projects" },
-                        { num: "98", suffix: "%", label: "Pass Rate" },
-                        { num: "24/7", suffix: "", label: "Support" }
-                    ].map((stat, i) => (
-                        <div key={i}>
-                            <div className="text-4xl font-black text-ink font-display">{stat.num}<span className="text-accent text-2xl">{stat.suffix}</span></div>
-                            <div className="text-xs text-ink-light uppercase tracking-widest mt-2">{stat.label}</div>
-                        </div>
-                    ))}
+                <div className="space-y-8 text-lg text-ink-light leading-loose">
+                    <p>
+                    {t.about.p1}
+                    </p>
+                    <p>
+                    {t.about.p2}
+                    </p>
+                    <div className="bg-paper p-8 border-l-4 border-accent mt-8 italic text-ink font-serif relative">
+                    "{t.about.p3}"
+                    </div>
+                    
+                    {/* Stats */}
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-8 pt-12 border-t border-ink-light/20 mt-8">
+                        {[
+                            { num: "4", suffix: "+", label: "Years Exp." },
+                            { num: "500", suffix: "+", label: "Projects" },
+                            { num: "98", suffix: "%", label: "Pass Rate" },
+                            { num: "24/7", suffix: "", label: "Support" }
+                        ].map((stat, i) => (
+                            <div key={i}>
+                                <div className="text-4xl font-black text-ink font-display">{stat.num}<span className="text-accent text-2xl">{stat.suffix}</span></div>
+                                <div className="text-xs text-ink-light uppercase tracking-widest mt-2">{stat.label}</div>
+                            </div>
+                        ))}
+                    </div>
                 </div>
             </div>
+
+            {/* Right Gallery - New Feature */}
+            <div className="h-full reveal delay-100 mt-12 lg:mt-0">
+                <HoverGallery images={[
+                    "https://images.unsplash.com/photo-1541339907198-e021fc9d13f1?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80", // Library/Study
+                    "https://images.unsplash.com/photo-1517048676732-d65bc937f952?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80", // Meeting
+                    "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80", // Writing
+                    "https://images.unsplash.com/photo-1523240795612-9a054b0db644?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80"  // Success/Graduation
+                ]} />
+            </div>
+
          </div>
     </div>
   );
@@ -262,14 +315,16 @@ const App: React.FC = () => {
               <h3 className="text-2xl font-bold mb-4 text-ink uppercase leading-none min-h-[3rem]">{service.title}</h3>
               <p className="text-ink-light mb-8 leading-relaxed h-24 text-sm">{service.desc}</p>
               
-              <button 
-                onClick={() => isAuthModalOpen || user ? null : setIsAuthModalOpen(true)}
+              <a 
+                href="https://wa.me/85297723792?text=I%20would%20like%20to%20know%20more%20about%20your%20services."
+                target="_blank"
+                rel="noreferrer"
                 className={`w-full py-3 font-bold text-xs uppercase tracking-widest border border-ink flex items-center justify-center gap-2 transition-all ${
                     user ? 'bg-ink text-paper' : 'bg-transparent text-ink hover:bg-ink hover:text-paper'
                 }`}
               >
-                 {user ? service.price : t.services.login_view}
-              </button>
+                 {t.services.login_view} <ArrowRight size={14} />
+              </a>
             </div>
           ))}
         </div>
@@ -280,53 +335,71 @@ const App: React.FC = () => {
   const TestimonialsSection = () => (
     <div id="testimonials" className="bg-surface py-32 md:py-40 relative border-b border-ink">
       <div className="max-w-[1920px] mx-auto px-6 md:px-12">
-        <div className="flex flex-col md:flex-row justify-between items-end mb-16 reveal">
-            <div className="max-w-2xl">
-                <span className="text-ink-light font-mono font-bold tracking-widest text-xs uppercase mb-3 block">04 / FEEDBACK</span>
-                <h2 className="text-4xl md:text-5xl font-black text-ink uppercase">{t.testimonials.title}</h2>
-            </div>
-            <div className="hidden md:block">
-                <Award size={48} className="text-ink" />
-            </div>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-             {[
-                { 
-                    name: "Sarah (RN)", 
-                    role: "Master of Nursing", 
-                    text: "本來趕唔切交份 Reflection，好彩有你哋！真係好專業，跟着個 Rubric 寫，最後拿咗 A-。真心推薦畀還要返 Shift 嘅姑娘。" 
-                },
-                { 
-                    name: "Jason", 
-                    role: "MBA Student", 
-                    text: "份 Case Study 數據分析做得好詳盡，完全係我要嘅野。幫我慳返好多時間專心做野。最緊要係準時交貨，無甩拖。" 
-                },
-                { 
-                    name: "Michelle", 
-                    role: "Social Work", 
-                    text: "客服秒回，完全無 AI 成分，過到 Turnitin。之前試過第二間中伏，呢間真係神仙救命，以後 Assignment 靠晒你哋。" 
-                }
-             ].map((tr, i) => (
-                <div key={i} className="bg-paper p-8 border border-ink relative reveal group hover:shadow-[5px_5px_0px_0px_var(--color-ink)] transition-shadow">
-                    <div className="absolute -top-3 -right-3 bg-surface border border-ink p-2 rounded-full z-10">
-                        <MessageSquare size={16} className="text-ink" />
-                    </div>
-                    <div className="flex gap-1 text-accent mb-6">
-                        {[1,2,3,4,5].map(s => <Star key={s} size={14} fill="currentColor" stroke="none" />)}
-                    </div>
-                    <p className="text-ink mb-8 leading-relaxed text-sm font-medium">"{tr.text}"</p>
-                    <div className="flex items-center gap-4 pt-6 border-t border-ink-light/20">
-                        <div className="w-10 h-10 bg-ink flex items-center justify-center font-bold text-paper text-xs rounded-full">
-                            {tr.name.charAt(0)}
-                        </div>
-                        <div>
-                            <div className="font-bold text-sm text-ink">{tr.name}</div>
-                            <div className="text-xs text-ink-light uppercase">{tr.role}</div>
-                        </div>
-                    </div>
+        
+        {/* Update: Split Layout for Testimonials */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24">
+            
+            {/* Left Column: Header + Cards */}
+            <div>
+                <div className="flex flex-col mb-16 reveal">
+                    <span className="text-ink-light font-mono font-bold tracking-widest text-xs uppercase mb-3 block">04 / FEEDBACK</span>
+                    <h2 className="text-4xl md:text-5xl font-black text-ink uppercase">{t.testimonials.title}</h2>
+                    <p className="text-ink-light mt-4 leading-relaxed font-light">{t.testimonials.desc}</p>
                 </div>
-             ))}
+
+                <div className="flex flex-col gap-8">
+                    {[
+                        { 
+                            name: "Sarah (RN)", 
+                            role: "Master of Nursing", 
+                            text: "本來趕唔切交份 Reflection，好彩有你哋！真係好專業，跟着個 Rubric 寫，最後拿咗 A-。真心推薦畀還要返 Shift 嘅姑娘。" 
+                        },
+                        { 
+                            name: "Jason", 
+                            role: "MBA Student", 
+                            text: "份 Case Study 數據分析做得好詳盡，完全係我要嘅野。幫我慳返好多時間專心做野。最緊要係準時交貨，無甩拖。" 
+                        },
+                        { 
+                            name: "Michelle", 
+                            role: "Social Work", 
+                            text: "客服秒回，完全無 AI 成分，過到 Turnitin。之前試過第二間中伏，呢間真係神仙救命，以後 Assignment 靠晒你哋。" 
+                        }
+                    ].map((tr, i) => (
+                        <div key={i} className="bg-paper p-8 border border-ink relative reveal group hover:shadow-[5px_5px_0px_0px_var(--color-ink)] transition-shadow">
+                            <div className="absolute -top-3 -right-3 bg-surface border border-ink p-2 rounded-full z-10">
+                                <MessageSquare size={16} className="text-ink" />
+                            </div>
+                            <div className="flex gap-1 text-accent mb-6">
+                                {[1,2,3,4,5].map(s => <Star key={s} size={14} fill="currentColor" stroke="none" />)}
+                            </div>
+                            <p className="text-ink mb-8 leading-relaxed text-sm font-medium">"{tr.text}"</p>
+                            <div className="flex items-center gap-4 pt-6 border-t border-ink-light/20">
+                                <div className="w-10 h-10 bg-ink flex items-center justify-center font-bold text-paper text-xs rounded-full">
+                                    {tr.name.charAt(0)}
+                                </div>
+                                <div>
+                                    <div className="font-bold text-sm text-ink">{tr.name}</div>
+                                    <div className="text-xs text-ink-light uppercase">{tr.role}</div>
+                                </div>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </div>
+
+            {/* Right Column: Gallery - New Feature */}
+            <div className="h-full reveal delay-200 mt-12 lg:mt-0">
+                 {/* Align content to bottom or center based on height */}
+                 <div className="sticky top-40">
+                    <HoverGallery images={[
+                        "https://images.unsplash.com/photo-1606326608606-aa0b62935f2b?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80", // Feedback/Exam
+                        "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80", // Students Happy
+                        "https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80", // Success
+                        "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80"  // Working on paper
+                    ]} />
+                 </div>
+            </div>
+
         </div>
       </div>
     </div>
@@ -408,6 +481,34 @@ const App: React.FC = () => {
                     {language === 'zh' ? '關閉' : 'Close'}
                 </button>
              </div>
+        </div>
+      )}
+      
+      {/* Image Lightbox Modal */}
+      {selectedImage && (
+        <div 
+            className="fixed inset-0 z-[200] bg-ink/95 backdrop-blur-md flex items-center justify-center p-4 animate-fade-in cursor-zoom-out"
+            onClick={() => setSelectedImage(null)}
+        >
+            <button 
+                className="absolute top-6 right-6 text-paper hover:text-accent transition-colors bg-surface/20 p-2 rounded-full"
+                onClick={() => setSelectedImage(null)}
+            >
+                <X size={32} />
+            </button>
+            
+            <div className="relative max-w-7xl max-h-[90vh] w-full h-full flex items-center justify-center">
+                <img 
+                    src={selectedImage} 
+                    alt="Full Preview" 
+                    className="max-w-full max-h-full object-contain border border-paper/20 shadow-2xl"
+                    /* Removed stopPropagation to allow clicking image to close on mobile */
+                />
+                 {/* Mobile Close Helper */}
+                <p className="absolute bottom-[-40px] left-1/2 -translate-x-1/2 text-paper/50 text-xs font-mono uppercase tracking-widest md:hidden">
+                    Tap anywhere to close
+                </p>
+            </div>
         </div>
       )}
 

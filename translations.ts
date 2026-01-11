@@ -16,15 +16,15 @@ export const translations = {
       testimonials: '客戶好評',
       faq: '常見問題',
       calculator: '智能報價',
-      login: '註冊 / 登入',
+      login: '會員中心 (即將推出)',
       logout: '登出',
       console: '會員中心',
-      access: '註冊 / 登入'
+      access: '會員中心 (即將推出)'
     },
     hero: {
-      est: 'Est. 2020 • 香港註冊學術機構',
-      title_1: '專注職涯發展',
-      title_2: '學位高效完成',
+      est: 'Est. 2020 • 專業學術諮詢',
+      title_1: '讓您專注職涯發展',
+      title_2: '毫不費勁完成學位',
       subtitle: '專為在職護理人員及高階專業人士打造的學術支援服務。自 2020 年以來，我們協助無數專業人士在繁忙工作中，依然能兼顧學業要求，順利畢業。',
       cta_primary: 'WhatsApp 諮詢',
       cta_secondary: '了解服務',
@@ -92,7 +92,7 @@ export const translations = {
           price: '登入查看詳情'
         }
       ],
-      login_view: '註冊解鎖更多資訊'
+      login_view: '了解更多'
     },
     team: {
       title: '頂尖學術團隊',
@@ -134,7 +134,7 @@ export const translations = {
     about: {
       title: '關於 Homework Terminator',
       p1: 'Homework Terminator 成立於 2020 年，初衷是為了支援香港前線醫護人員與全職專業人士。我們深知在輪班工作與高壓環境下，進修學位是極大的挑戰。',
-      p2: '我們相信學位應是職涯晉升的助力，而非生活的重擔。我們集結了本地大學 (HKU/CUHK/PolyU) 及海外名校的學術團隊，為您提供精準、地道且合規的學術協助。',
+      p2: '我們相信學位應是職涯晉升的助力，而非生活的重擔。我們的團隊匯聚了來自香港三大（HKU/CUHK/HKUST）的碩博士精英，以及八大院校的一級榮譽畢業生，為您提供精準、地道且合規的學術協助。',
       p3: '我們致力於提供專業學術支援，助您在繁忙工作中高效完成學位。'
     },
     faq: {
@@ -213,9 +213,9 @@ export const translations = {
         access_btn: '閱覽全文'
       },
       brand_gen: {
-        title: '品牌資產生成器',
-        subtitle: '生成適用於 Instagram 的官方品牌 Logo 圖片。',
-        btn_download: '下載 Instagram Logo (JPG)'
+        title: '品牌素材生成器',
+        subtitle: '生成適用於 Instagram (1080x1080) 的官方品牌標誌圖片。',
+        btn_download: '下載 JPG'
       }
     },
     footer: {
@@ -249,10 +249,10 @@ export const translations = {
       testimonials: 'Reviews',
       faq: 'FAQ',
       calculator: 'Calculator',
-      login: 'Register / Login',
+      login: 'Member Center (Coming Soon)',
       logout: 'Logout',
       console: 'Console',
-      access: 'Register / Login'
+      access: 'Member Center (Coming Soon)'
     },
     hero: {
       est: 'Est. 2020 • HK Based',
@@ -325,7 +325,7 @@ export const translations = {
           price: 'Login for details'
         }
       ],
-      login_view: 'Register to unlock'
+      login_view: 'Learn More'
     },
     team: {
       title: 'Expert Academic Team',
@@ -367,7 +367,7 @@ export const translations = {
     about: {
       title: 'About Homework Terminator',
       p1: 'Founded in 2020, we support excellent nurses and professionals who struggle to balance heavy workloads with academic requirements.',
-      p2: 'We believe your degree should facilitate your career, not hinder your life. Our team of local and overseas experts provides precise assistance.',
+      p2: 'We believe your degree should facilitate your career, not hinder your life. Our team brings together Masters and PhD elites from Hong Kong\'s "Big Three" (HKU/CUHK/HKUST) and First Class Honours graduates from the top eight universities, providing you with precise, authentic, and compliant academic assistance.',
       p3: 'We are committed to providing professional academic support to help you efficiently complete your degree.'
     },
     faq: {
@@ -447,8 +447,8 @@ export const translations = {
       },
       brand_gen: {
         title: 'Brand Asset Generator',
-        subtitle: 'Generate official brand logo images optimized for Instagram.',
-        btn_download: 'Download Instagram Logo (JPG)'
+        subtitle: 'Generate official brand logo images optimized for Instagram (1080x1080).',
+        btn_download: 'Download JPG'
       }
     },
     footer: {

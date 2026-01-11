@@ -1,9 +1,8 @@
 import React from 'react';
 import { User, UserRole } from '../types';
-import { BarChart, DollarSign, Settings, Users, FileText, Briefcase } from 'lucide-react';
+import { BarChart, DollarSign, Settings, Users, FileText, Briefcase, User as UserIcon } from 'lucide-react';
 import { BarChart as ReBarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import SamplePapers from './SamplePapers';
-import BrandGenerator from './BrandGenerator';
 import { Language, translations } from '../translations';
 
 interface DashboardProps {
@@ -145,7 +144,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user, language = 'zh' }) => {
               <li key={idx} className="border-b border-gray-100 pb-4 last:border-0 last:pb-0">
                 <div className="flex justify-between items-center mb-2">
                   <span className="font-bold text-black uppercase">{lead.name}</span>
-                  <span className="text-[10px] px-2 py-1 font-bold uppercase tracking-widest ${lead.status === 'CONFIRMED' ? 'bg-black text-white' : 'bg-gray-200 text-gray-600'}">
+                  <span className={`text-[10px] px-2 py-1 font-bold uppercase tracking-widest ${lead.status === 'CONFIRMED' ? 'bg-black text-white' : 'bg-gray-200 text-gray-600'}`}>
                     {lead.status}
                   </span>
                 </div>
@@ -156,9 +155,6 @@ const Dashboard: React.FC<DashboardProps> = ({ user, language = 'zh' }) => {
         </div>
       </div>
       
-      {/* Brand Asset Generator */}
-      <BrandGenerator language={language} />
-
     </div>
   );
 
@@ -178,4 +174,73 @@ const Dashboard: React.FC<DashboardProps> = ({ user, language = 'zh' }) => {
             </div>
           </div>
           <div>
-            <label className="block text-xs font-bold uppercase text
+            <label className="block text-xs font-bold uppercase text-gray-500 mb-4 tracking-widest">{writerT?.rate_label || 'Rate Expectation'}</label>
+            <div className="flex items-center border border-black p-2">
+                 <span className="text-gray-500 text-sm font-bold px-2">HKD</span>
+                 <input type="number" className="flex-1 outline-none text-black font-bold" defaultValue={350} />
+                 <span className="text-gray-500 text-xs font-bold px-2">/ 1k words</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="border border-black p-8 bg-white">
+        <h3 className="text-xl font-bold text-black mb-8 uppercase flex items-center">
+             <FileText className="mr-3" size={20} /> {writerT?.pool_title || 'Order Pool'}
+        </h3>
+        <div className="overflow-x-auto">
+            <table className="w-full text-left border-collapse">
+                <thead>
+                    <tr className="border-b-2 border-black text-xs uppercase tracking-widest text-gray-500">
+                        <th className="py-4 font-bold">{writerT?.col_subject || 'Subject'}</th>
+                        <th className="py-4 font-bold">{writerT?.col_type || 'Type'}</th>
+                        <th className="py-4 font-bold text-right">{writerT?.col_payout || 'Payout'}</th>
+                        <th className="py-4 font-bold text-right">{commonT?.action || 'Action'}</th>
+                    </tr>
+                </thead>
+                <tbody className="text-sm">
+                    {[
+                        { sub: 'NUR4002 Clinical', type: 'Reflection (2500w)', pay: 850 },
+                        { sub: 'MGT5001 Strategy', type: 'Essay (1500w)', pay: 550 },
+                        { sub: 'SOC3005 Welfare', type: 'Proposal (3000w)', pay: 1100 },
+                    ].map((job, idx) => (
+                        <tr key={idx} className="border-b border-gray-100 hover:bg-gray-50 group">
+                            <td className="py-4 font-bold text-black">{job.sub}</td>
+                            <td className="py-4 text-gray-600">{job.type}</td>
+                            <td className="py-4 text-right font-mono font-bold text-black">HK${job.pay}</td>
+                            <td className="py-4 text-right">
+                                <button className="bg-black text-white px-4 py-2 text-[10px] font-bold uppercase tracking-widest hover:bg-accent transition-colors">
+                                    {writerT?.btn_apply || 'Apply'}
+                                </button>
+                            </td>
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
+        </div>
+      </div>
+    </div>
+  );
+
+  return (
+    <div className="max-w-7xl mx-auto px-6 md:px-12 pb-20">
+      <div className="mb-12 border-b border-black pb-8">
+        <h2 className="text-4xl md:text-5xl font-black text-black uppercase mb-2">
+          {t.welcome} <span className="text-accent">{user.name}</span>.
+        </h2>
+        <p className="text-gray-500 font-mono text-sm uppercase tracking-widest flex items-center gap-2">
+          {user.role === UserRole.CUSTOMER && <UserIcon size={16} />}
+          {user.role === UserRole.AGENT && <Briefcase size={16} />}
+          {user.role === UserRole.WRITER && <Settings size={16} />}
+          {user.role === UserRole.CUSTOMER ? t.role_label.customer : user.role === UserRole.AGENT ? t.role_label.agent : t.role_label.writer}
+        </p>
+      </div>
+
+      {user.role === UserRole.CUSTOMER && renderCustomerView()}
+      {user.role === UserRole.AGENT && renderAgentView()}
+      {user.role === UserRole.WRITER && renderWriterView()}
+    </div>
+  );
+};
+
+export default Dashboard;
